@@ -1,9 +1,8 @@
-namespace WebapiGateway.Controllers;
+namespace MRS.ApiGateway.Controllers;
 
-using EHMRS.signallingMqttClient;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Models;
+using Mqtt;
 
 [ApiController]
 [Route("[controller]")]
@@ -16,9 +15,9 @@ public class SignalController : ControllerBase
     }
 
     private readonly Cache<Signal> _signalCache;
-    private readonly Client _client;
+    private readonly MQTTService _client;
 
-    public SignalController(Cache<Signal> signalCache, Client client)
+    public SignalController(Cache<Signal> signalCache, MQTTService client)
     {
         _signalCache = signalCache;
         _client = client;
@@ -42,7 +41,7 @@ public class SignalController : ControllerBase
     }
 
     [HttpPut("{name}", Name = "SaveSignal")]
-    public IActionResult SaveSignal(string name, SignalInput input)
+    public async Task<IActionResult> SaveSignal(string name, SignalInput input)
     {
         if (!_signalCache.Contains(name))
         {
@@ -64,13 +63,14 @@ public class SignalController : ControllerBase
         };
 
         // TODO: This should probably call something in SignalStatusMessageHandler
-        // TODO: And should definitely be awaited so errors can be reported to the client
-        _client.SendMessage(
+        await _client.SendMessage(
             "signals/" + name + "/override",
-            JsonConvert.SerializeObject(msg),
+            msg,
             "user",
-            true
+            true,
+            HttpContext.RequestAborted
         );
+
         return NoContent();
     }
 }

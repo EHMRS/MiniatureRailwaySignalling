@@ -1,12 +1,12 @@
-namespace WebapiGateway.Mqtt;
+namespace MRS.ApiGateway.Mqtt;
+using System.Text.Json;
 
 using Models;
-using Newtonsoft.Json;
 
-public class SignalStatusMessageHandler : MessageHandlerService
+public class SignalStateMessageHandler : MessageHandlerService
 {
     private readonly Cache<Signal> _signalCache;
-    private readonly ILogger<SignalStatusMessageHandler> _logger;
+    private readonly ILogger<SignalStateMessageHandler> _logger;
 
     [Serializable]
     private sealed class OutputMessage
@@ -67,7 +67,7 @@ public class SignalStatusMessageHandler : MessageHandlerService
 
     private void HandleOverride(string name)
     {
-        var message = JsonConvert.DeserializeObject<OverrideMessage>(getMessagePayload());
+        var message = JsonSerializer.Deserialize<OverrideMessage>(getMessagePayload());
         if (message == null)
             return;
 
@@ -77,7 +77,7 @@ public class SignalStatusMessageHandler : MessageHandlerService
 
     private void HandleSystem(string name)
     {
-        var message = JsonConvert.DeserializeObject<SystemMessage>(getMessagePayload());
+        var message = JsonSerializer.Deserialize<SystemMessage>(getMessagePayload());
         if (message == null)
             return;
 
@@ -87,7 +87,7 @@ public class SignalStatusMessageHandler : MessageHandlerService
 
     private void HandleOutput(string name)
     {
-        var message = JsonConvert.DeserializeObject<OutputMessage>(getMessagePayload());
+        var message = JsonSerializer.Deserialize<OutputMessage>(getMessagePayload());
         if (message == null)
             return;
 
@@ -117,7 +117,7 @@ public class SignalStatusMessageHandler : MessageHandlerService
         signal.OutputState = outputState;
     }
 
-    public SignalStatusMessageHandler(Cache<Signal> signalCache, MQTTService mqttService, ILogger<SignalStatusMessageHandler> logger) : base(mqttService, logger)
+    public SignalStateMessageHandler(Cache<Signal> signalCache, MQTTService mqttService, ILogger<SignalStateMessageHandler> logger) : base(mqttService, logger)
     {
         _signalCache = signalCache;
         _logger = logger;

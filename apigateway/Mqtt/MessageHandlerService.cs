@@ -1,6 +1,6 @@
-﻿namespace WebapiGateway.Mqtt;
+﻿namespace MRS.ApiGateway.Mqtt;
 
-using EHMRS.signallingMqttClient;
+using MRS.Mqtt;
 
 public abstract class MessageHandlerService : BaseMessageHandler, IHostedService
 {

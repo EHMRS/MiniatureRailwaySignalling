@@ -1,12 +1,12 @@
-namespace WebapiGateway.Mqtt;
+namespace MRS.ApiGateway.Mqtt;
+using System.Text.Json;
 
 using Models;
-using Newtonsoft.Json;
 
-public class PointStatusMessageHandler : MessageHandlerService
+public class PointStateMessageHandler : MessageHandlerService
 {
     private readonly Cache<Point> _pointsCache;
-    private readonly ILogger<PointStatusMessageHandler> _logger;
+    private readonly ILogger<PointStateMessageHandler> _logger;
 
     // TODO: Are these MQTT objects? If so should probably be under a namespace like WebapiGateway.Models.MQTT
     // TODO: Also, having two bools doesn't feel right, but that may be down to whatever MQTT library you're using
@@ -77,7 +77,7 @@ public class PointStatusMessageHandler : MessageHandlerService
 
     private void HandleOverride(string name)
     {
-        var message = JsonConvert.DeserializeObject<OverrideMessage>(getMessagePayload());
+        var message = JsonSerializer.Deserialize<OverrideMessage>(getMessagePayload());
         if (message == null)
             return;
 
@@ -89,7 +89,7 @@ public class PointStatusMessageHandler : MessageHandlerService
 
     private void HandleSystem(string name)
     {
-        var message = JsonConvert.DeserializeObject<SystemMessage>(getMessagePayload());
+        var message = JsonSerializer.Deserialize<SystemMessage>(getMessagePayload());
         if (message == null)
             return;
 
@@ -100,7 +100,7 @@ public class PointStatusMessageHandler : MessageHandlerService
 
     private void HandleInput(string name)
     {
-        var message = JsonConvert.DeserializeObject<InputMessage>(getMessagePayload());
+        var message = JsonSerializer.Deserialize<InputMessage>(getMessagePayload());
         string inputState;
         if (message == null)
             return;
@@ -129,7 +129,7 @@ public class PointStatusMessageHandler : MessageHandlerService
     private void HandleOutput(string name)
     {
         // As this is used quite a bit, could be moved in to the parent class
-        var message = JsonConvert.DeserializeObject<OutputMessage>(getMessagePayload());
+        var message = JsonSerializer.Deserialize<OutputMessage>(getMessagePayload());
         if (message == null)
             return;
 
@@ -155,7 +155,7 @@ public class PointStatusMessageHandler : MessageHandlerService
         point.OutputState = outputState;
     }
 
-    public PointStatusMessageHandler(Cache<Point> pointsCache, MQTTService mqttService, ILogger<PointStatusMessageHandler> logger) : base(mqttService, logger)
+    public PointStateMessageHandler(Cache<Point> pointsCache, MQTTService mqttService, ILogger<PointStateMessageHandler> logger) : base(mqttService, logger)
     {
         _logger = logger;
         _pointsCache = pointsCache;

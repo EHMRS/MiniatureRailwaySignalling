@@ -1,28 +1,35 @@
-namespace WebapiGateway.Controllers;
+namespace MRS.ApiGateway.Controllers;
 
-using EHMRS.signallingMqttClient;
+using Mqtt;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Models;
+using System.Text.Json.Serialization;
 
 [ApiController]
 [Route("[controller]")]
 public class PointController : ControllerBase
 {
     [Serializable]
-    private sealed class OverrideMessage
+    private sealed class RequestMessage
     {
+        [JsonPropertyName("input")]
         public string Input { get; set; } = "";
-        public string Output { get; set; } = "";
+
+        // Newtonsoft is nice, but I only applied the change to the other one
+        // What change?
+        [JsonPropertyName("output")]
+        public PointOutput Output { get; set; }
     }
 
     private readonly Cache<Point> _pointCache;
-    private readonly Client _client;
+    private readonly MQTTService _client;
+    private readonly ILogger<PointController> _logger;
 
-    public PointController(Cache<Point> pointCache, Client client)
+    public PointController(Cache<Point> pointCache, MQTTService client, ILogger<PointController> logger)
     {
         _pointCache = pointCache;
         _client = client;
+        _logger = logger;
     }
 
     [HttpGet("", Name = "GetPoints")]
@@ -43,25 +50,20 @@ public class PointController : ControllerBase
     }
 
     [HttpPut("{name}", Name = "SavePoint")]
-    public IActionResult SavePoint(string name, PointInput input)
+    public async Task<IActionResult> SavePoint(string name, PointInput input)
     {
         if (!_pointCache.Contains(name))
         {
             return NotFound();
         }
 
+        _logger.LogDebug($"Got update for {name} to out:{input.OutputState} in:{input.InputState}");
+
         // Do the MQTT stuff to override the state here
-        var msg = new OverrideMessage
+        var msg = new RequestMessage
         {
-            Output = input.OutputState switch
-            {
-                "normal" => "normal",
-                "reverse" => "reverse",
-                "off" => "off",
-                "system" => "system",
-                _ => throw new BadHttpRequestException("Unexpected Output State"),
-            },
-            Input = input.ReturnState switch
+            Output = input.OutputState ?? throw new BadHttpRequestException("Unexpected Output State"),
+            Input = input.InputState switch
             {
                 "normal" => "normal",
                 "reverse" => "reverse",
@@ -72,12 +74,13 @@ public class PointController : ControllerBase
         };
 
         // TODO: This should probably call something in PointStatusMessageHandler
-        // TODO: And should definitely be awaited so that any failures can be reported to the client
-        _client.SendMessage(
-            "points/" + name + "/override",
-            JsonConvert.SerializeObject(msg),
+        _logger.LogDebug($"Sending message to topic points/{name}/request");
+        await _client.SendMessage(
+            "points/" + name + "/request",
+            msg,
             "user",
-            true
+            true,
+            HttpContext.RequestAborted
         );
 
         return NoContent();

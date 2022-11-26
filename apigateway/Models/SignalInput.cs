@@ -1,4 +1,4 @@
-namespace WebapiGateway.Models;
+namespace MRS.ApiGateway.Models;
 
 [Serializable]
 public class SignalInput

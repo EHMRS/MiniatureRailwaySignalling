@@ -1,9 +1,9 @@
-namespace WebapiGateway.Models;
+namespace MRS.ApiGateway.Models;
 
 [Serializable]
 public class PointInput
 {
     // TODO: These should probably be enums
-    public string OutputState { get; set; } = "unknown";
-    public string ReturnState { get; set; } = "unknown";
+    public PointOutput? OutputState { get; set; }
+    public string InputState { get; set; } = "unknown";
 }

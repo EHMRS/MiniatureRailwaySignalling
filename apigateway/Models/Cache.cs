@@ -1,4 +1,4 @@
-namespace WebapiGateway.Models;
+namespace MRS.ApiGateway.Models;
 
 using System.Runtime.Caching;
 
@@ -37,6 +37,6 @@ public class Cache<T> : MemoryCache where T : class
 
     public IEnumerable<T> GetAll()
     {
-        return this.Cast<T>();
+        return this.Select(entry => entry.Value).Cast<T>();
     }
 }
