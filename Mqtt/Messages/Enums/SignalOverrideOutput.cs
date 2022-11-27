@@ -5,9 +5,10 @@ using System.Runtime.Serialization;
 public enum SignalOverrideOutput
 {
     [EnumMember(Value = "system")] System = -1,
-    [EnumMember(Value = "danger")] Danger = 0,
-    [EnumMember(Value = "caution")] Caution = 1,
-    [EnumMember(Value = "clear")] Clear = 2,
-    [EnumMember(Value = "shunt")] Shunt = 3,
-    [EnumMember(Value = "noaspect")] NoAspect = 4
+    [EnumMember(Value = "unknown")] Unknown = 0,
+    [EnumMember(Value = "danger")] Danger = 1,
+    [EnumMember(Value = "caution")] Caution = 2,
+    [EnumMember(Value = "clear")] Clear = 3,
+    [EnumMember(Value = "shunt")] Shunt = 4,
+    [EnumMember(Value = "noaspect")] NoAspect = 5
 }

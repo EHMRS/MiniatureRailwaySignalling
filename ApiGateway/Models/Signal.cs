@@ -1,10 +1,12 @@
 namespace MRS.ApiGateway.Models;
 
+using MRS.Mqtt.Messages.Enums;
+
 [Serializable]
 public class Signal
 {
     // TODO: These should probably be enums
-    public string OutputState { get; set; } = "unknown";
-    public string SystemOutputState { get; set; } = "unknown";
-    public string OverrideOutputState { get; set; } = "unknown";
+    public SignalOutput OutputState { get; set; }
+    public SignalSystemOutput SystemOutputState { get; set; }
+    public SignalOverrideOutput OverrideOutputState { get; set; }
 }

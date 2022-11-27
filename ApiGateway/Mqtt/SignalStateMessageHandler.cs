@@ -1,38 +1,14 @@
 namespace MRS.ApiGateway.Mqtt;
 using System.Text.Json;
 
+using MRS.Mqtt.Messages.Signals;
+
 using Models;
 
 public class SignalStateMessageHandler : MessageHandlerService
 {
     private readonly Cache<Signal> _signalCache;
     private readonly ILogger<SignalStateMessageHandler> _logger;
-
-    [Serializable]
-    private sealed class OutputMessage
-    {
-        public bool Danger { get; set; }
-        public bool Caution { get; set; }
-        public bool Clear { get; set; }
-        public bool Route1 { get; set; }
-        public bool Route2 { get; set; }
-        public bool Shunt { get; set; }
-    }
-
-    [Serializable]
-    private sealed class SystemMessage
-    {
-        public string? Output { get; set; }
-        public bool Route1 { get; set; }
-        public bool Route2 { get; set; }
-        public int Delay { get; set; }
-    }
-
-    [Serializable]
-    private sealed class OverrideMessage
-    {
-        public string? Output { get; set; }
-    }
 
     public override async void Handle()
     {
@@ -91,26 +67,26 @@ public class SignalStateMessageHandler : MessageHandlerService
         if (message == null)
             return;
 
-        string outputState;
+        SignalOutput outputState;
         if (message.Danger)
         {
-            outputState = "danger";
+            outputState = SignalOutput.Danger;
         }
         else if (message.Caution)
         {
-            outputState = "caution";
+            outputState = SignalOutput.Caution;
         }
         else if (message.Clear)
         {
-            outputState = "clear";
+            outputState = SignalOutput.Clear;
         }
         else if (message.Shunt)
         {
-            outputState = "shunt";
+            outputState = SignalOutput.Shunt;
         }
         else
         {
-            outputState = "unknown";
+            outputState = SignalOutput.Unknown;
         }
 
         var signal = _signalCache.GetOrAdd(name);

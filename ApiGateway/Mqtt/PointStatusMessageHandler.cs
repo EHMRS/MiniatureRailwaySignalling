@@ -61,9 +61,14 @@ public class PointStateMessageHandler : MessageHandlerService
 
     private void HandleSystem(string name)
     {
+        _logger.LogDebug($"Handling System: {GetMessagePayload()}");
         var message = JsonSerializer.Deserialize<SystemMessage>(GetMessagePayload());
+        _logger.LogDebug("Still handling system");
         if (message == null)
+        {
+            _logger.LogDebug("Message is null");
             return;
+        }
 
         var point = _pointsCache.GetOrAdd(name);
         point.SystemInputState = message.Input;
@@ -73,11 +78,11 @@ public class PointStateMessageHandler : MessageHandlerService
     private void HandleInput(string name)
     {
 
-        _logger.LogDebug($"Handling input...");
+//        _logger.LogDebug($"Handling input: {_wrappedMessage.username }");
         var message = JsonSerializer.Deserialize<InputMessage>(GetMessagePayload());
         if (message == null)
         {
-            _logger.LogDebug("Actually, it's null");
+//            _logger.LogDebug("Actually, it's null");
             return;
         }
 
@@ -101,6 +106,7 @@ public class PointStateMessageHandler : MessageHandlerService
         }
 
         var point = _pointsCache.GetOrAdd(name);
+        _logger.LogDebug($"Setting input to {inputState}");
         point.InputState = inputState;
     }
 
@@ -131,6 +137,7 @@ public class PointStateMessageHandler : MessageHandlerService
 
         var point = _pointsCache.GetOrAdd(name);
         point.OutputState = outputState;
+        _logger.LogDebug($"Setting output to {outputState}");
     }
 
     public PointStateMessageHandler(Cache<Point> pointsCache, MQTTService mqttService, ILogger<PointStateMessageHandler> logger) : base(mqttService, logger)

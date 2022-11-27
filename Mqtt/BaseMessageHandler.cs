@@ -9,9 +9,9 @@ public abstract class BaseMessageHandler
 {
     protected class MessageWrapper
     {
-        [JsonPropertyName("username")] public string Username;
-        [JsonPropertyName("source")] public string Source;
-        [JsonPropertyName("payload")] public Object Payload;
+        [JsonPropertyName("username")] public string username { get; set; }
+        [JsonPropertyName("source")] public string source { get; set; }
+        [JsonPropertyName("payload")] public object payload { get; set; }
     }
 
     protected MqttApplicationMessageReceivedEventArgs _messageEvent;
@@ -39,7 +39,7 @@ public abstract class BaseMessageHandler
 
     protected string GetMessagePayload()
     {
-        return JsonSerializer.Serialize(_wrappedMessage.Payload);
+        return JsonSerializer.Serialize(_wrappedMessage.payload);
     }
 
     protected string GetTopic()

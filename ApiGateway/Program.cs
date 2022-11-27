@@ -1,3 +1,4 @@
+using System.Text.Json;
 using MRS.ApiGateway.Models;
 using MRS.ApiGateway.Mqtt;
 using System.Text.Json.Serialization;
@@ -8,7 +9,7 @@ builder.Logging.AddConsole();
 
 // Add services to the container.
 builder.Services.AddControllers()
-    .AddJsonOptions(x => x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
+    .AddJsonOptions(x => x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase))
 );
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
