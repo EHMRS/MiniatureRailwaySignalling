@@ -6,7 +6,7 @@ using System.Text.Json;
 
 public abstract class BaseMessageHandler {
 
-    private class MessageWrapper
+    protected class MessageWrapper
     {
         public string username;
         public string source;
@@ -16,7 +16,7 @@ public abstract class BaseMessageHandler {
 
     protected string _topicPrefix;
 
-    private MessageWrapper _wrappedMessage;
+    protected MessageWrapper _wrappedMessage;
 
     protected string _mqttPrefix;
 

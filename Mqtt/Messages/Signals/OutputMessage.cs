@@ -3,7 +3,8 @@ namespace MRS.Mqtt.Messages.Signals;
 using System.Text.Json.Serialization;
 
 [Serializable]
-public struct OutputMessage {
+public class OutputMessage
+{
     [JsonPropertyName("danger")]
     public bool Danger { get; set; }
 

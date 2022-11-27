@@ -2,10 +2,10 @@ namespace MRS.Mqtt.Messages.Enums;
 
 using System.Runtime.Serialization;
 
-public enum PointOverrideOutput
+public enum PointRequestInput
 {
     [EnumMember(Value = "system")] System = -1,
     [EnumMember(Value = "normal")] Normal = 0,
     [EnumMember(Value = "reverse")] Reverse = 1,
-    [EnumMember(Value = "off")] Off = 2
+    [EnumMember(Value = "noreturn")] NoReturn = 2
 }

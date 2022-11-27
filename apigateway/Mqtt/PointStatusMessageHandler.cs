@@ -1,5 +1,7 @@
 namespace MRS.ApiGateway.Mqtt;
 using System.Text.Json;
+using MRS.Mqtt.Messages.Points;
+using System.Text;
 
 using Models;
 
@@ -7,36 +9,6 @@ public class PointStateMessageHandler : MessageHandlerService
 {
     private readonly Cache<Point> _pointsCache;
     private readonly ILogger<PointStateMessageHandler> _logger;
-
-    // TODO: Are these MQTT objects? If so should probably be under a namespace like WebapiGateway.Models.MQTT
-    // TODO: Also, having two bools doesn't feel right, but that may be down to whatever MQTT library you're using
-    [Serializable]
-    private sealed class OutputMessage
-    {
-        public bool Normal { get; set; }
-        public bool Reverse { get; set; }
-    }
-
-    [Serializable]
-    private sealed class InputMessage
-    {
-        public int Normal { get; set; }
-        public int Reverse { get; set; }
-    }
-
-    [Serializable]
-    private sealed class SystemMessage
-    {
-        public string? Input { get; set; }
-        public string? Output { get; set; }
-    }
-
-    [Serializable]
-    private sealed class OverrideMessage
-    {
-        public string? Input { get; set; }
-        public string? Output { get; set; }
-    }
 
     // TODO: Async methods should almost always return a Task or ValueTask
     public override void Handle()
@@ -100,26 +72,32 @@ public class PointStateMessageHandler : MessageHandlerService
 
     private void HandleInput(string name)
     {
-        var message = JsonSerializer.Deserialize<InputMessage>(getMessagePayload());
-        string inputState;
-        if (message == null)
-            return;
 
-        if (message.Normal > 0 && message.Reverse == 0)
+        _logger.LogDebug($"Handling input...");
+        var message = JsonSerializer.Deserialize<InputMessage>(getMessagePayload());
+        if (message == null)
         {
-            inputState = "normal";
+            _logger.LogDebug("Actually, it's null");
+            return;
         }
-        else if (message.Normal == 0 && message.Reverse > 0)
+
+        PointInput inputState;
+
+        if (message.normal > 0 && message.reverse == 0)
         {
-            inputState = "reverse";
+            inputState = PointInput.Normal;
         }
-        else if (message.Normal == 0 && message.Reverse == 0)
+        else if (message.normal == 0 && message.reverse > 0)
         {
-            inputState = "noreturn";
+            inputState = PointInput.Reverse;
+        }
+        else if (message.normal == 0 && message.reverse == 0)
+        {
+            inputState = PointInput.NoReturn;
         }
         else
         {
-            inputState = "error";
+            inputState = PointInput.Error;
         }
 
         var point = _pointsCache.GetOrAdd(name);
@@ -133,22 +111,22 @@ public class PointStateMessageHandler : MessageHandlerService
         if (message == null)
             return;
 
-        string outputState;
+        PointOutput outputState;
         if (message.Normal)
         {
-            outputState = "normal";
+            outputState = PointOutput.Normal;
         }
         else if (message.Reverse)
         {
-            outputState = "reverse";
+            outputState = PointOutput.Reverse;
         }
         else if (!message.Reverse && !message.Normal)
         {
-            outputState = "off";
+            outputState = PointOutput.Off;
         }
         else
         {
-            outputState = "unknown";
+            outputState = PointOutput.Unknown;
         }
 
         var point = _pointsCache.GetOrAdd(name);

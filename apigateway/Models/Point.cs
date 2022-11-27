@@ -1,13 +1,14 @@
 namespace MRS.ApiGateway.Models;
 
+using MRS.Mqtt.Messages.Enums;
+
 [Serializable]
 public class Point
 {
-    // TODO: These should probably be enums
-    public string OutputState { get; set; } = "unknown";
-    public string InputState { get; set; } = "unknown";
-    public string SystemOutputState { get; set; } = "unknown";
-    public string SystemInputState { get; set; } = "unknown";
-    public string OverrideOutputState { get; set; } = "unknown";
-    public string OverrideInputState { get; set; } = "unknown";
+    public PointOutput OutputState { get; set; }
+    public PointInput InputState { get; set; }
+    public PointSystemOutput SystemOutputState { get; set; }
+    public PointSystemInput SystemInputState { get; set; }
+    public PointOverrideOutput OverrideOutputState { get; set; }
+    public PointOverrideInput OverrideInputState { get; set; }
 }

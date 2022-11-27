@@ -3,24 +3,13 @@ namespace MRS.ApiGateway.Controllers;
 using Mqtt;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using System.Text.Json.Serialization;
+
+using MRS.Mqtt.Messages.Points;
 
 [ApiController]
 [Route("[controller]")]
 public class PointController : ControllerBase
 {
-    [Serializable]
-    private sealed class RequestMessage
-    {
-        [JsonPropertyName("input")]
-        public string Input { get; set; } = "";
-
-        // Newtonsoft is nice, but I only applied the change to the other one
-        // What change?
-        [JsonPropertyName("output")]
-        public PointOutput Output { get; set; }
-    }
-
     private readonly Cache<Point> _pointCache;
     private readonly MQTTService _client;
     private readonly ILogger<PointController> _logger;
@@ -50,7 +39,7 @@ public class PointController : ControllerBase
     }
 
     [HttpPut("{name}", Name = "SavePoint")]
-    public async Task<IActionResult> SavePoint(string name, PointInput input)
+    public async Task<IActionResult> SavePointAsync(string name, PointPut input)
     {
         if (!_pointCache.Contains(name))
         {
@@ -63,14 +52,7 @@ public class PointController : ControllerBase
         var msg = new RequestMessage
         {
             Output = input.OutputState ?? throw new BadHttpRequestException("Unexpected Output State"),
-            Input = input.InputState switch
-            {
-                "normal" => "normal",
-                "reverse" => "reverse",
-                "noreturn" => "noreturn",
-                "system" => "system",
-                _ => throw new BadHttpRequestException("Unexpected Return State"),
-            },
+            Input = input.InputState ?? throw new BadHttpRequestException("Unexpected Return State"),
         };
 
         // TODO: This should probably call something in PointStatusMessageHandler

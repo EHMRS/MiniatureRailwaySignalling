@@ -1,9 +1,12 @@
 namespace MRS.ApiGateway.Models;
 
-[Serializable]
-public class PointInput
+using System.Runtime.Serialization;
+
+public enum PointInput
 {
-    // TODO: These should probably be enums
-    public PointOutput? OutputState { get; set; }
-    public string InputState { get; set; } = "unknown";
+    [EnumMember(Value = "system")] System = -1,
+    [EnumMember(Value = "normal")] Normal = 0,
+    [EnumMember(Value = "reverse")] Reverse = 1,
+    [EnumMember(Value = "noreturn")] NoReturn = 2,
+    [EnumMember(Value = "error")] Error = 3,
 }
