@@ -36,7 +36,7 @@ public class SignalStateMessageHandler : MessageHandlerService
 
     public override async void Handle()
     {
-        var topic = getTopic();
+        var topic = GetTopic();
 
         var parts = topic.Split('/');
 
@@ -67,7 +67,7 @@ public class SignalStateMessageHandler : MessageHandlerService
 
     private void HandleOverride(string name)
     {
-        var message = JsonSerializer.Deserialize<OverrideMessage>(getMessagePayload());
+        var message = JsonSerializer.Deserialize<OverrideMessage>(GetMessagePayload());
         if (message == null)
             return;
 
@@ -77,7 +77,7 @@ public class SignalStateMessageHandler : MessageHandlerService
 
     private void HandleSystem(string name)
     {
-        var message = JsonSerializer.Deserialize<SystemMessage>(getMessagePayload());
+        var message = JsonSerializer.Deserialize<SystemMessage>(GetMessagePayload());
         if (message == null)
             return;
 
@@ -87,7 +87,7 @@ public class SignalStateMessageHandler : MessageHandlerService
 
     private void HandleOutput(string name)
     {
-        var message = JsonSerializer.Deserialize<OutputMessage>(getMessagePayload());
+        var message = JsonSerializer.Deserialize<OutputMessage>(GetMessagePayload());
         if (message == null)
             return;
 

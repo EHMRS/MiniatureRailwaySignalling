@@ -3,15 +3,17 @@ namespace MRS.Mqtt;
 using MQTTnet.Client;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
-public abstract class BaseMessageHandler {
-
+public abstract class BaseMessageHandler
+{
     protected class MessageWrapper
     {
-        public string username;
-        public string source;
-        public Object payload;
+        [JsonPropertyName("username")] public string Username;
+        [JsonPropertyName("source")] public string Source;
+        [JsonPropertyName("payload")] public Object Payload;
     }
+
     protected MqttApplicationMessageReceivedEventArgs _messageEvent;
 
     protected string _topicPrefix;
@@ -27,39 +29,43 @@ public abstract class BaseMessageHandler {
     public void Prepare(MqttApplicationMessageReceivedEventArgs e, string mqttPrefix, string? topicPrefix = "")
     {
         _messageEvent = e;
-        _topicPrefix = topicPrefix;
+        _topicPrefix = topicPrefix ?? "";
         _mqttPrefix = mqttPrefix;
-        string msg = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
+        var msg = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
         _wrappedMessage = JsonSerializer.Deserialize<MessageWrapper>(msg);
     }
 
     public abstract void Handle();
 
-    protected string getMessagePayload()
+    protected string GetMessagePayload()
     {
-        return JsonSerializer.Serialize(_wrappedMessage.payload);
+        return JsonSerializer.Serialize(_wrappedMessage.Payload);
     }
 
-    protected string getTopic()
+    protected string GetTopic()
     {
-        string topic = _messageEvent.ApplicationMessage.Topic;
+        var topic = _messageEvent.ApplicationMessage.Topic;
 
-        if (topic.StartsWith(_mqttPrefix))
+        if (topic.StartsWith(_mqttPrefix, StringComparison.Ordinal))
         {
-            topic = topic.Substring(_mqttPrefix.Length);
+            topic = topic[_mqttPrefix.Length..];
         }
-        if (topic.Substring(0, 1) == "/")
+
+        if (topic[0..1] == "/")
         {
-            topic = topic.Substring(1);
+            topic = topic[1..];
         }
-        if (_topicPrefix != "" && topic.StartsWith(_topicPrefix))
+
+        if (_topicPrefix != "" && topic.StartsWith(_topicPrefix, StringComparison.Ordinal))
         {
-            topic = topic.Substring(_topicPrefix.Length);
+            topic = topic[_topicPrefix.Length..];
         }
-        if (topic.Substring(0, 1) == "/")
+
+        if (topic[0..1] == "/")
         {
-            topic = topic.Substring(1);
+            topic = topic[1..];
         }
+
         return topic;
     }
 }
