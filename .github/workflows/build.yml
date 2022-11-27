@@ -1,0 +1,41 @@
+---
+name: Build & Test
+
+on:
+  push:
+  pull_request:
+    branches:
+      - "main"
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        project:
+          - 'ApiGateway'
+          - 'Mqtt'
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core SDK 7.0
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0
+      - uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore ${{ matrix.project }}
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal ${{ matrix.project }}
