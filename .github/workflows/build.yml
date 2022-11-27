@@ -1,5 +1,5 @@
 ---
-name: Lint Code Base
+name: Build & Test
 
 on:
   push:
@@ -15,8 +15,10 @@ jobs:
   build:
     strategy:
       matrix:
-        project: ['apigateway', 'Mqtt' ]
-    name: build
+        project:
+          - 'ApiGateway'
+          - 'Mqtt'
+    name: Build & Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
