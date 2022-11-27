@@ -13,7 +13,7 @@ public class PointStateMessageHandler : MessageHandlerService
     // TODO: Async methods should almost always return a Task or ValueTask
     public override void Handle()
     {
-        var topic = getTopic();
+        var topic = GetTopic();
 
         var parts = topic.Split('/');
 
@@ -49,7 +49,7 @@ public class PointStateMessageHandler : MessageHandlerService
 
     private void HandleOverride(string name)
     {
-        var message = JsonSerializer.Deserialize<OverrideMessage>(getMessagePayload());
+        var message = JsonSerializer.Deserialize<OverrideMessage>(GetMessagePayload());
         if (message == null)
             return;
 
@@ -61,7 +61,7 @@ public class PointStateMessageHandler : MessageHandlerService
 
     private void HandleSystem(string name)
     {
-        var message = JsonSerializer.Deserialize<SystemMessage>(getMessagePayload());
+        var message = JsonSerializer.Deserialize<SystemMessage>(GetMessagePayload());
         if (message == null)
             return;
 
@@ -74,7 +74,7 @@ public class PointStateMessageHandler : MessageHandlerService
     {
 
         _logger.LogDebug($"Handling input...");
-        var message = JsonSerializer.Deserialize<InputMessage>(getMessagePayload());
+        var message = JsonSerializer.Deserialize<InputMessage>(GetMessagePayload());
         if (message == null)
         {
             _logger.LogDebug("Actually, it's null");
@@ -107,7 +107,7 @@ public class PointStateMessageHandler : MessageHandlerService
     private void HandleOutput(string name)
     {
         // As this is used quite a bit, could be moved in to the parent class
-        var message = JsonSerializer.Deserialize<OutputMessage>(getMessagePayload());
+        var message = JsonSerializer.Deserialize<OutputMessage>(GetMessagePayload());
         if (message == null)
             return;
 
