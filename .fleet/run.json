@@ -1,0 +1,18 @@
+{
+  "configurations": [
+    {
+      "name": "API Gateway",
+      "type": "dotnet_launch_settings",
+      "environment": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "allowParallelRun": false,
+      "projectPath": "ApiGateway/ApiGateway.csproj",
+      "exePath": "ApiGateway/bin/Debug/net7.0/MRS.ApiGateway.dll",
+      "profileName": "http",
+      "commandName": "Project",
+      "commandLineArgs": [],
+      "applicationUrl": ["http://localhost:5189"]
+    }
+  ]
+}
