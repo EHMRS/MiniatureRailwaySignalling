@@ -10,8 +10,8 @@ public class Client
     private readonly IMqttClient _mqClient;
     private readonly MqttClientOptions _options;
 
-    private bool _connected = false;
-    private bool _connecting = false;
+    private bool _connected;
+    private bool _connecting;
 
     private Dictionary<string, BaseMessageHandler> _messageHandlers = new Dictionary<string, BaseMessageHandler>();
 
@@ -29,12 +29,12 @@ public class Client
     {
         _mqClient = new MqttFactory().CreateMqttClient();
 
-        MqttClientOptionsBuilderTlsParameters tlsOptions = new MqttClientOptionsBuilderTlsParameters
-            {
-                AllowUntrustedCertificates = allowUntrustedCertificate,
-                UseTls = useTls,
-                CertificateValidationHandler = (certContext) => true
-            };
+        var tlsOptions = new MqttClientOptionsBuilderTlsParameters
+        {
+            AllowUntrustedCertificates = allowUntrustedCertificate,
+            UseTls = useTls,
+            CertificateValidationHandler = (certContext) => true
+        };
 
         _options = new MqttClientOptionsBuilder().WithTcpServer(hostname, port).WithCredentials(username, password).WithTls(tlsOptions).Build();
 
@@ -49,23 +49,25 @@ public class Client
 
     public async Task<bool> SubscribeToTopic(string topic, CancellationToken cancellationToken = default)
     {
-        string newtopic = _mqttPrefix;
+        var newtopic = _mqttPrefix;
         if (newtopic.Substring(newtopic.Length - 1) != "/")
         {
             newtopic += "/";
         }
+
         newtopic += topic;
         if (!_connected)
         {
             return false;
         }
+
         await _mqClient.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(newtopic).Build(), cancellationToken);
         return true;
     }
 
     public async Task SendMessage(string topic, object payload, string user, bool retain = false, CancellationToken cancellationToken = default)
     {
-        MessageTemplate message = new MessageTemplate();
+        var message = new MessageTemplate();
         message.payload = payload;
         message.username = user;
         message.source = _application;
@@ -75,11 +77,12 @@ public class Client
         {
             newTopic += "/";
         }
+
         newTopic += topic;
         // Why is it sending the message with escaped quotes
         // This is how it should look...
         //{"username":"user","source":"webapi","payload":{"input":"reverse","output":"normal"}}
-        MqttApplicationMessage applicationMessage = new MqttApplicationMessageBuilder().WithTopic(newTopic).WithPayload(JsonSerializer.Serialize(message)).WithRetainFlag(retain).Build();
+        var applicationMessage = new MqttApplicationMessageBuilder().WithTopic(newTopic).WithPayload(JsonSerializer.Serialize(message)).WithRetainFlag(retain).Build();
         await _mqClient.PublishAsync(applicationMessage, CancellationToken.None);
     }
 
@@ -101,6 +104,7 @@ public class Client
                 Thread.Sleep(1000);
             }
         }
+
         _mqClient.ApplicationMessageReceivedAsync += OnMessage;
         _mqClient.DisconnectedAsync += OnDisconnect;
         _connecting = false;
@@ -115,26 +119,24 @@ public class Client
 
     private async Task OnMessage(MqttApplicationMessageReceivedEventArgs e)
     {
-        string payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
+        var payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
 
-        string topic = e.ApplicationMessage.Topic;
-        topic = topic.Substring(_mqttPrefix.Length);
-
+        var topic = e.ApplicationMessage.Topic;
+        topic = topic[_mqttPrefix.Length..];
+        // TODO: this should use TryGetValue
         if (_messageHandlers.ContainsKey(topic))
         {
-            BaseMessageHandler handler = _messageHandlers[topic];
+            var handler = _messageHandlers[topic];
             handler.Prepare(e, _mqttPrefix);
             handler.Handle();
             return;
         }
 
-        foreach (KeyValuePair<string, BaseMessageHandler> entry in _messageHandlers)
+        foreach (var (key, handler) in _messageHandlers)
         {
-            if (topic.StartsWith(entry.Key))
+            if (topic.StartsWith(key, StringComparison.Ordinal))
             {
-                BaseMessageHandler handler = entry.Value;
-
-                handler.Prepare(e, _mqttPrefix, entry.Key);
+                handler.Prepare(e, _mqttPrefix, key);
                 handler.Handle();
             }
         }

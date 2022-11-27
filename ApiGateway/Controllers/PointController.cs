@@ -3,7 +3,6 @@ namespace MRS.ApiGateway.Controllers;
 using Mqtt;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-
 using MRS.Mqtt.Messages.Points;
 
 [ApiController]
