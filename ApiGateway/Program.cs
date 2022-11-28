@@ -9,10 +9,15 @@ builder.Logging.AddConsole();
 
 // Add services to the container.
 builder.Services.AddControllers()
-    .AddJsonOptions(x => x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase))
-);
+    .AddJsonOptions(
+        configure: static x =>
+        {
+            x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+            x.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        }
+    );
 
-builder.Services.AddRouting(options => options.LowercaseUrls = true);
+builder.Services.AddRouting(static options => options.LowercaseUrls = true);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -21,9 +26,20 @@ builder.Services.AddSingleton<Cache<Point>>();
 builder.Services.AddSingleton<Cache<Signal>>();
 builder.Services.AddSingleton<Cache<Tracksection>>();
 
-// TODO: Connection details should be loaded from a config provider
 builder.Services
-    .AddSingleton(static services => new MQTTService(services.GetRequiredService<ILogger<MQTTService>>(), "webapi", "192.168.255.6", 1883, "richard", "password", "signalling/", true, true))
+    .AddSingleton(
+        services => new MQTTService(
+            services.GetRequiredService<ILogger<MQTTService>>(),
+            "ApiGateway",
+            builder.Configuration["MQTT_HOST"] ?? "localhost",
+            int.Parse(builder.Configuration["MQTT_PORT"] ?? "1883"),
+            builder.Configuration["MQTT_USER"] ?? "webapi",
+            builder.Configuration["MQTT_PASSWORD"] ?? "password",
+            builder.Configuration["MQTT_PREFIX"] ?? "signalling/",
+            true,
+            true
+        )
+    )
     .AddHostedService(static services => (MQTTService) services.GetRequiredService<MQTTService>());
 
 builder.Services.AddHostedService<PointStateMessageHandler>();

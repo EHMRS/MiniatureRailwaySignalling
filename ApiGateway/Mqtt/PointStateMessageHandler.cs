@@ -1,8 +1,7 @@
 namespace MRS.ApiGateway.Mqtt;
+
 using System.Text.Json;
 using MRS.Mqtt.Messages.Points;
-using System.Text;
-
 using Models;
 
 public class PointStateMessageHandler : MessageHandlerService
@@ -77,7 +76,6 @@ public class PointStateMessageHandler : MessageHandlerService
 
     private void HandleInput(string name)
     {
-
 //        _logger.LogDebug($"Handling input: {_wrappedMessage.username }");
         var message = JsonSerializer.Deserialize<InputMessage>(GetMessagePayload());
         if (message == null)
