@@ -14,13 +14,13 @@ public abstract class BaseMessageHandler
         [JsonPropertyName("payload")] public object payload { get; set; }
     }
 
-    protected MqttApplicationMessageReceivedEventArgs? _messageEvent;
+    protected MqttApplicationMessageReceivedEventArgs _messageEvent;
 
-    protected string? _topicPrefix;
+    protected string _topicPrefix;
 
-    protected MessageWrapper? _wrappedMessage;
+    protected MessageWrapper _wrappedMessage;
 
-    protected string? _mqttPrefix;
+    protected string _mqttPrefix;
 
     protected BaseMessageHandler()
     {
