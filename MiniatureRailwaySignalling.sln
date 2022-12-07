@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mqtt", "Mqtt\Mqtt.csproj", "{199F237D-467E-44AB-9107-B67A14A2ECC2}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "AudioSystem", "AudioSystem\AudioSystem.pyproj", "{D35D4B41-1D13-40A0-A5FB-82BC6DF0B150}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,10 +23,8 @@ Global
 		{199F237D-467E-44AB-9107-B67A14A2ECC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{199F237D-467E-44AB-9107-B67A14A2ECC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{199F237D-467E-44AB-9107-B67A14A2ECC2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{16F80CD5-C03B-437B-9F02-7FEF22EBA476}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{16F80CD5-C03B-437B-9F02-7FEF22EBA476}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{16F80CD5-C03B-437B-9F02-7FEF22EBA476}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{16F80CD5-C03B-437B-9F02-7FEF22EBA476}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D35D4B41-1D13-40A0-A5FB-82BC6DF0B150}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D35D4B41-1D13-40A0-A5FB-82BC6DF0B150}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
