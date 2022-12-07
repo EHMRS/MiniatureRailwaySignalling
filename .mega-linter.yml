@@ -22,7 +22,8 @@ EXCLUDED_DIRECTORIES:
   - ".git"
 
 PRE_COMMANDS:
-  - command: pip install -r requirements.txt
+  - command: pip install -r AduioSystem/requirements.txt
+    cwd: "workspace"
     venv: pylint        # Will be run at the root of MegaLinter docker image
 
 
