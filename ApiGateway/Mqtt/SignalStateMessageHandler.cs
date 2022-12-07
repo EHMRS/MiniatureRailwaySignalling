@@ -1,8 +1,7 @@
 namespace MRS.ApiGateway.Mqtt;
+
 using System.Text.Json;
-
 using MRS.Mqtt.Messages.Signals;
-
 using Models;
 
 public class SignalStateMessageHandler : MessageHandlerService
@@ -10,7 +9,7 @@ public class SignalStateMessageHandler : MessageHandlerService
     private readonly Cache<Signal> _signalCache;
     private readonly ILogger<SignalStateMessageHandler> _logger;
 
-    public override async void Handle()
+    public override void Handle()
     {
         var topic = GetTopic();
 
@@ -69,25 +68,15 @@ public class SignalStateMessageHandler : MessageHandlerService
 
         SignalOutput outputState;
         if (message.Danger)
-        {
             outputState = SignalOutput.Danger;
-        }
         else if (message.Caution)
-        {
             outputState = SignalOutput.Caution;
-        }
         else if (message.Clear)
-        {
             outputState = SignalOutput.Clear;
-        }
         else if (message.Shunt)
-        {
             outputState = SignalOutput.Shunt;
-        }
         else
-        {
             outputState = SignalOutput.Unknown;
-        }
 
         var signal = _signalCache.GetOrAdd(name);
         signal.OutputState = outputState;

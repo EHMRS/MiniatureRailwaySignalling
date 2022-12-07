@@ -10,5 +10,5 @@ public enum SignalOutput
     [EnumMember(Value = "clear")] Clear = 2,
     [EnumMember(Value = "shunt")] Shunt = 3,
     [EnumMember(Value = "noaspect")] Noaspect = 4,
-    [EnumMember(Value = "unknown")] Unknown = 5,
+    [EnumMember(Value = "unknown")] Unknown = 5
 }

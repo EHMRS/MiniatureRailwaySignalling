@@ -46,7 +46,7 @@ public class SignalController : ControllerBase
         // Do the MQTT stuff to override the state here
         var msg = new OverrideMessage
         {
-            Output = input.OutputState,
+            Output = input.OutputState
         };
 
         // TODO: This should probably call something in SignalStatusMessageHandler

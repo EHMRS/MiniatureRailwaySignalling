@@ -76,32 +76,20 @@ public class PointStateMessageHandler : MessageHandlerService
 
     private void HandleInput(string name)
     {
-//        _logger.LogDebug($"Handling input: {_wrappedMessage.username }");
         var message = JsonSerializer.Deserialize<InputMessage>(GetMessagePayload());
         if (message == null)
-        {
-//            _logger.LogDebug("Actually, it's null");
             return;
-        }
 
         PointInput inputState;
 
         if (message.normal > 0 && message.reverse == 0)
-        {
             inputState = PointInput.Normal;
-        }
         else if (message.normal == 0 && message.reverse > 0)
-        {
             inputState = PointInput.Reverse;
-        }
         else if (message.normal == 0 && message.reverse == 0)
-        {
             inputState = PointInput.NoReturn;
-        }
         else
-        {
             inputState = PointInput.Error;
-        }
 
         var point = _pointsCache.GetOrAdd(name);
         _logger.LogDebug($"Setting input to {inputState}");
@@ -117,21 +105,13 @@ public class PointStateMessageHandler : MessageHandlerService
 
         PointOutput outputState;
         if (message.Normal)
-        {
             outputState = PointOutput.Normal;
-        }
         else if (message.Reverse)
-        {
             outputState = PointOutput.Reverse;
-        }
         else if (!message.Reverse && !message.Normal)
-        {
             outputState = PointOutput.Off;
-        }
         else
-        {
             outputState = PointOutput.Unknown;
-        }
 
         var point = _pointsCache.GetOrAdd(name);
         point.OutputState = outputState;
