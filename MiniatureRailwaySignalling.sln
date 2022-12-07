@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mqtt", "Mqtt\Mqtt.csproj", "{199F237D-467E-44AB-9107-B67A14A2ECC2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AudioPlayer", "AudioPlayer\AudioPlayer.csproj", "{16F80CD5-C03B-437B-9F02-7FEF22EBA476}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
