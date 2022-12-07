@@ -10,14 +10,14 @@ from mqtt import mqtt
 
 class AudioHandler:
     """! Audio handler class """
-    directories = []
-    audio_files = {}
+    directories: list[str] = []
+    audio_files: dict[str, list[str]] = {}
 
-    audio_counters = {}
-    audio_count = {}
+    audio_counters: dict[str, int] = {}
+    audio_count: dict[str, int] = {}
     root = os.path.dirname(__file__)
 
-    audio_queue = queue.Queue()
+    audio_queue: queue.Queue = queue.Queue()
 
     def init(self):
         """! Initialise the class """
