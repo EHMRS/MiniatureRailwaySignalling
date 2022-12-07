@@ -3,9 +3,9 @@
 @mainpage Signalling System Audio System
 @section intro_sec Introduction
 
-This is the audio code for the signalling system for the East Herts Miniature Railway. The
-project is written in python and handles all audio that is played through the station PA
-system
+This is the audio code for the signalling system for the East Herts Miniature
+Railway. The project is written in python and handles all audio that is played
+through the station PA system
 
 @file main.py
 
