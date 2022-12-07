@@ -22,7 +22,7 @@ EXCLUDED_DIRECTORIES:
   - ".git"
 
 PRE_COMMANDS:
-  - command: pip install -r AduioSystem/requirements.txt
+  - command: pip install -r AudioSystem/requirements.txt
     cwd: "workspace"
     venv: pylint        # Will be run at the root of MegaLinter docker image
 
