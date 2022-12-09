@@ -7,11 +7,12 @@ using System.Text.Json.Serialization;
 
 public abstract class BaseMessageHandler
 {
+    [Serializable]
     protected struct MessageWrapper
     {
-        [JsonPropertyName("username")] public string username { get; set; }
-        [JsonPropertyName("source")] public string source { get; set; }
-        [JsonPropertyName("payload")] public object payload { get; set; }
+        [JsonPropertyName("username")] public string Username { get; set; }
+        [JsonPropertyName("source")] public string Source { get; set; }
+        [JsonPropertyName("payload")] public object Payload { get; set; }
     }
 
     protected MqttApplicationMessageReceivedEventArgs _messageEvent;
@@ -39,7 +40,7 @@ public abstract class BaseMessageHandler
 
     protected string GetMessagePayload()
     {
-        return JsonSerializer.Serialize(_wrappedMessage.payload);
+        return JsonSerializer.Serialize(_wrappedMessage.Payload);
     }
 
     protected string GetTopic()
