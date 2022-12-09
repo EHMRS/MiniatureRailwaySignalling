@@ -18,7 +18,8 @@ public class SignalController : ControllerBase
         _client = client;
     }
 
-    [HttpGet("", Name = "GetSignals")] e<Signal>> GetSignals()
+    [HttpGet("", Name = "GetSignals")]
+    public ActionResult<IEnumerable<Signal>> GetSignals()
     {
         return _signalCache.GetAll().ToList();
     }
