@@ -7,11 +7,12 @@ using System.Text.Json.Serialization;
 
 public abstract class BaseMessageHandler
 {
-    protected class MessageWrapper
+    [Serializable]
+    protected struct MessageWrapper
     {
-        [JsonPropertyName("username")] public string Username;
-        [JsonPropertyName("source")] public string Source;
-        [JsonPropertyName("payload")] public Object Payload;
+        [JsonPropertyName("username")] public string Username { get; set; }
+        [JsonPropertyName("source")] public string Source { get; set; }
+        [JsonPropertyName("payload")] public object Payload { get; set; }
     }
 
     protected MqttApplicationMessageReceivedEventArgs _messageEvent;

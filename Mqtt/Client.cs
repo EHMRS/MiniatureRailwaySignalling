@@ -18,7 +18,7 @@ public class Client
     private readonly string _application;
     private readonly string _mqttPrefix;
 
-    private class MessageTemplate
+    private struct MessageTemplate
     {
         public string username;
         public string source;

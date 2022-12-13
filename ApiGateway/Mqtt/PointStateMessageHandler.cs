@@ -1,8 +1,7 @@
 namespace MRS.ApiGateway.Mqtt;
+
 using System.Text.Json;
 using MRS.Mqtt.Messages.Points;
-using System.Text;
-
 using Models;
 
 public class PointStateMessageHandler : MessageHandlerService
@@ -61,9 +60,14 @@ public class PointStateMessageHandler : MessageHandlerService
 
     private void HandleSystem(string name)
     {
+        _logger.LogDebug($"Handling System: {GetMessagePayload()}");
         var message = JsonSerializer.Deserialize<SystemMessage>(GetMessagePayload());
+        _logger.LogDebug("Still handling system");
         if (message == null)
+        {
+            _logger.LogDebug("Message is null");
             return;
+        }
 
         var point = _pointsCache.GetOrAdd(name);
         point.SystemInputState = message.Input;
@@ -72,35 +76,23 @@ public class PointStateMessageHandler : MessageHandlerService
 
     private void HandleInput(string name)
     {
-
-        _logger.LogDebug($"Handling input...");
         var message = JsonSerializer.Deserialize<InputMessage>(GetMessagePayload());
         if (message == null)
-        {
-            _logger.LogDebug("Actually, it's null");
             return;
-        }
 
         PointInput inputState;
 
         if (message.normal > 0 && message.reverse == 0)
-        {
             inputState = PointInput.Normal;
-        }
         else if (message.normal == 0 && message.reverse > 0)
-        {
             inputState = PointInput.Reverse;
-        }
         else if (message.normal == 0 && message.reverse == 0)
-        {
             inputState = PointInput.NoReturn;
-        }
         else
-        {
             inputState = PointInput.Error;
-        }
 
         var point = _pointsCache.GetOrAdd(name);
+        _logger.LogDebug($"Setting input to {inputState}");
         point.InputState = inputState;
     }
 
@@ -113,24 +105,17 @@ public class PointStateMessageHandler : MessageHandlerService
 
         PointOutput outputState;
         if (message.Normal)
-        {
             outputState = PointOutput.Normal;
-        }
         else if (message.Reverse)
-        {
             outputState = PointOutput.Reverse;
-        }
         else if (!message.Reverse && !message.Normal)
-        {
             outputState = PointOutput.Off;
-        }
         else
-        {
             outputState = PointOutput.Unknown;
-        }
 
         var point = _pointsCache.GetOrAdd(name);
         point.OutputState = outputState;
+        _logger.LogDebug($"Setting output to {outputState}");
     }
 
     public PointStateMessageHandler(Cache<Point> pointsCache, MQTTService mqttService, ILogger<PointStateMessageHandler> logger) : base(mqttService, logger)

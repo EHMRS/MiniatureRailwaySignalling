@@ -21,6 +21,12 @@ MARKDOWN_MARKDOWN_LINK_CHECK_DISABLE_ERRORS: true
 EXCLUDED_DIRECTORIES:
   - ".git"
 
+PRE_COMMANDS:
+  - command: pip install pydub paho-mqtt
+    cwd: "workspace"
+    venv: pylint        # Will be run at the root of MegaLinter docker image
+
+
 DISABLE_LINTERS:
   - "SPELL_CSPELL"
   - "JAVASCRIPT_STANDARD"

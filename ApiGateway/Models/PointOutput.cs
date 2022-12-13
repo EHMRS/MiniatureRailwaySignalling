@@ -2,6 +2,7 @@ namespace MRS.ApiGateway.Models;
 
 using System.Runtime.Serialization;
 
+[Serializable]
 public enum PointOutput
 {
     [EnumMember(Value = "system")] System = -1,

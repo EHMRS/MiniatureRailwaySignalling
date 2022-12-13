@@ -3,17 +3,12 @@ namespace MRS.ApiGateway.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Mqtt;
+using MRS.Mqtt.Messages.Signals;
 
 [ApiController]
 [Route("[controller]")]
 public class SignalController : ControllerBase
 {
-    [Serializable]
-    private sealed class OverrideMessage
-    {
-        public string Output { get; set; } = "";
-    }
-
     private readonly Cache<Signal> _signalCache;
     private readonly MQTTService _client;
 
@@ -41,7 +36,7 @@ public class SignalController : ControllerBase
     }
 
     [HttpPut("{name}", Name = "SaveSignal")]
-    public async Task<IActionResult> SaveSignal(string name, SignalInput input)
+    public async Task<IActionResult> SaveSignal(string name, SignalPut input)
     {
         if (!_signalCache.Contains(name))
         {
@@ -51,15 +46,7 @@ public class SignalController : ControllerBase
         // Do the MQTT stuff to override the state here
         var msg = new OverrideMessage
         {
-            Output = input.OutputState switch
-            {
-                "danger" => "danger",
-                "caution" => "caution",
-                "clear" => "clear",
-                "shunt" => "shunt",
-                "system" => "system",
-                _ => throw new BadHttpRequestException("Invalid Output State"),
-            },
+            Output = input.OutputState
         };
 
         // TODO: This should probably call something in SignalStatusMessageHandler

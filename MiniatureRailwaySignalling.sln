@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 25.0.1704.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32602.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MRS.ApiGateway", "ApiGateway\ApiGateway.csproj", "{E68BBE82-57E8-455C-B421-FFAF75E69560}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{E68BBE82-57E8-455C-B421-FFAF75E69560}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MRS.Mqtt", "Mqtt\Mqtt.csproj", "{199F237D-467E-44AB-9107-B67A14A2ECC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mqtt", "Mqtt\Mqtt.csproj", "{199F237D-467E-44AB-9107-B67A14A2ECC2}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "AudioSystem", "AudioSystem\AudioSystem.pyproj", "{D35D4B41-1D13-40A0-A5FB-82BC6DF0B150}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6CD17D35-F3A7-4A9C-9649-BAF526062EE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6CD17D35-F3A7-4A9C-9649-BAF526062EE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6CD17D35-F3A7-4A9C-9649-BAF526062EE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6CD17D35-F3A7-4A9C-9649-BAF526062EE7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E68BBE82-57E8-455C-B421-FFAF75E69560}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E68BBE82-57E8-455C-B421-FFAF75E69560}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E68BBE82-57E8-455C-B421-FFAF75E69560}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -25,6 +23,8 @@ Global
 		{199F237D-467E-44AB-9107-B67A14A2ECC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{199F237D-467E-44AB-9107-B67A14A2ECC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{199F237D-467E-44AB-9107-B67A14A2ECC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D35D4B41-1D13-40A0-A5FB-82BC6DF0B150}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D35D4B41-1D13-40A0-A5FB-82BC6DF0B150}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
